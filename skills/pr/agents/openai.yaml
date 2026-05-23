@@ -1,0 +1,4 @@
+interface:
+  display_name: "PR"
+  short_description: "Create or update GitHub PRs"
+  default_prompt: "Use $pr to sync with main, push the current branch, and create or update a GitHub pull request with a structured body."
