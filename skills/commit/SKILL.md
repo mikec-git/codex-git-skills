@@ -50,6 +50,7 @@ TEST PLAN
 ```
 
 Rules:
+
 - Use uppercase headers exactly: `TLDR`, `WHAT CHANGED`, `TEST PLAN`.
 - Include test commands and results in `TEST PLAN`.
 - Prefer repo-relative paths.
@@ -59,9 +60,11 @@ Rules:
 ## Command Scope
 
 Use only the minimal needed commands:
+
 - Inspect: `git status`, `git diff`, `git log`
 - Stage: `git add`
 - Commit: `git commit`
+- Amend (when needed): `git commit --amend` — only to refine the latest commit that has NOT been pushed yet (fold in a small fix, or correct the message/format). Never amend a commit already on the remote; never force-push.
 - Verify: repo-specific test/build commands required by the change
 
-Do not push, merge, rebase, amend, or create PRs from this skill.
+Do not push, merge, rebase, force-push, or create PRs from this skill. Amending is allowed only for the latest unpushed commit (see Command Scope); never amend a commit that already exists on the remote.
