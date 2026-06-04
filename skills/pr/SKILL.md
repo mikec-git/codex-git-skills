@@ -25,8 +25,11 @@ Create or update a GitHub pull request for the current branch.
      - Merge `origin/main` for already-pushed/shared branches when safer.
    - Pause on conflicts or unsafe rewrite risk.
 4. Push:
-   - Push current branch to origin.
+   - Push current branch to origin before creating or updating the PR.
+   - If the branch has no upstream, set it with `git push -u origin <branch>`.
    - If history was rewritten by an explicit prior amend/metadata step, use `git push --force-with-lease`; otherwise use normal `git push`.
+   - Pause on missing remotes, auth failures, non-fast-forward rejection,
+     lease failures, or protected-branch risk.
 5. Create or update the PR:
    - Use `gh pr view --json number,url,title,body,headRefName,baseRefName`.
    - If a PR exists, update it with `gh pr edit`.

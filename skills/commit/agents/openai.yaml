@@ -1,4 +1,4 @@
 interface:
   display_name: "Commit"
-  short_description: "Create scoped git commits"
-  default_prompt: "Use $commit to inspect local changes, stage intended files, run focused tests, and create a structured git commit."
+  short_description: "Create and push scoped git commits"
+  default_prompt: "Use $commit to inspect local changes, stage intended files, run focused tests, create a structured git commit, and push the current task branch."
