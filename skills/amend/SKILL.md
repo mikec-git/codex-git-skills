@@ -1,6 +1,6 @@
 ---
 name: amend
-description: Amend the latest git commit with local repository changes and push the amended branch. Use when the user asks to amend, fold changes into the previous commit, update the last commit, or amend and push. Inspects and stages intended local changes, runs focused tests, preserves or updates the structured commit message with TLDR, WHAT CHANGED, and TEST PLAN sections, syncs with main before pushing when appropriate, resolves safe sync conflicts, and pushes rewritten upstream history with force-with-lease.
+description: Amend the latest git commit with local repository changes and push the amended branch. Use when the user asks to amend, fold changes into the previous commit, update the last commit, or amend and push. Inspects and stages intended local changes, runs focused tests, preserves or updates the structured commit message with TLDR, WHAT CHANGED, and TEST PLAN sections, syncs with main before pushing when appropriate, resolves safe sync conflicts, and pushes rewritten upstream history, including base branches, with force-with-lease.
 ---
 
 # Amend
@@ -33,14 +33,14 @@ Fold current local changes into the latest commit.
      repo workflow requires it and it can be done safely. This sync happens
      before every push.
    - Resolve conflicts using Conflict Handling when safe.
-   - If the branch is `main`, `master`, or another protected base branch, do
-     not push unless the user explicitly asked to rewrite that base branch.
+   - Treat this skill invocation as permission to push the rewritten current
+     branch, including `main`, `master`, or another base branch.
    - If the branch had an upstream before the amend, push rewritten history
      with `git push --force-with-lease`.
    - If the branch has no upstream and has an `origin` remote, push with
      `git push -u origin <branch>`.
    - Pause on lease failures, auth failures, missing remotes,
-     protected-branch risk, or unsafe rewrite risk.
+     remote protected-branch rejection, or unsafe rewrite risk.
 
 ## Conflict Handling
 

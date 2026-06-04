@@ -1,6 +1,6 @@
 ---
 name: commit
-description: Create and push a scoped git commit from local repository changes. Use when the user asks to commit, make a commit, save changes in git, or create a checkpoint commit. Inspects changes first, stages intended local repo files, runs focused tests, writes a structured commit message with TLDR, WHAT CHANGED, and TEST PLAN sections, syncs with main, resolves safe sync conflicts, then pushes the current task branch.
+description: Create and push a scoped git commit from local repository changes. Use when the user asks to commit, make a commit, save changes in git, or create a checkpoint commit. Inspects changes first, stages intended local repo files, runs focused tests, writes a structured commit message with TLDR, WHAT CHANGED, and TEST PLAN sections, syncs with main, resolves safe sync conflicts, then pushes the current branch, including base branches.
 ---
 
 # Commit
@@ -36,14 +36,14 @@ current task branch.
      about whether the branch should be rebased or merged.
 6. Push:
    - Identify the current branch and upstream.
-   - If the branch is `main`, `master`, or another protected base branch, do
-     not push unless the user explicitly asked to push that base branch.
+   - Treat this skill invocation as permission to push the current branch,
+     including `main`, `master`, or another base branch.
    - If the branch has an upstream, push with `git push`.
    - If the branch has no upstream and has an `origin` remote, push with
      `git push -u origin <branch>`.
    - Pause on missing remotes, auth failures, non-fast-forward rejection,
-     protected-branch risk, or any uncertainty about where the branch should
-     be pushed.
+     remote protected-branch rejection, or uncertainty about where the branch
+     should be pushed.
 7. Report:
    - Commit hash, pushed branch/upstream, staged files summary, and test
      results.
@@ -104,7 +104,8 @@ Use only the minimal needed commands:
 - Sync/push: `git fetch`, `git rebase` or `git merge`, `git rebase --continue`, `git merge --continue`, `git push`
 - Verify: repo-specific test/build commands required by the change
 
-Do not force-push or create PRs from this skill. Use rebase/merge only to sync
-the current branch with `main` before pushing. Amending is allowed only for the
-latest unpushed commit (see Command Scope); never amend a commit that already
-exists on the remote.
+Do not force-push or create PRs from this skill. Always attempt the push when
+the workflow reaches the push step. Use rebase/merge only to sync the current
+branch with `main` before pushing. Amending is allowed only for the latest
+unpushed commit (see Command Scope); never amend a commit that already exists
+on the remote.

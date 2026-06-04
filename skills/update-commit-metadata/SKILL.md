@@ -1,6 +1,6 @@
 ---
 name: update-commit-metadata
-description: Update the latest git commit metadata without changing files. Use when the user asks to rewrite, clean up, retitle, restructure, or update the latest commit message/body/trailers. Produces commit metadata with TLDR, WHAT CHANGED, and TEST PLAN sections, preserves accurate test results, syncs with main before pushing rewritten history, resolves safe sync conflicts, and pushes with force-with-lease when needed.
+description: Update the latest git commit metadata without changing files. Use when the user asks to rewrite, clean up, retitle, restructure, or update the latest commit message/body/trailers. Produces commit metadata with TLDR, WHAT CHANGED, and TEST PLAN sections, preserves accurate test results, syncs with main before pushing rewritten history, resolves safe sync conflicts, and pushes the current branch, including base branches, with force-with-lease when needed.
 ---
 
 # Update Commit Metadata
@@ -24,8 +24,11 @@ Rewrite only the latest commit's message metadata. Do not change repo files.
    - Sync with main using the safest appropriate rebase/merge path before every
      push.
    - Resolve conflicts using Conflict Handling when safe.
+   - Treat this skill invocation as permission to push the rewritten current
+     branch, including `main`, `master`, or another base branch.
    - Push rewritten history with `git push --force-with-lease`.
-   - Pause on lease failures or unsafe rewrite risk.
+   - Pause on lease failures, remote protected-branch rejection, or unsafe
+     rewrite risk.
 
 ## Conflict Handling
 
