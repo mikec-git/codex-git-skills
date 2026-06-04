@@ -1,6 +1,6 @@
 ---
 name: pr
-description: Create or update a GitHub pull request for the current git branch. Use when the user asks to open, create, submit, update, or push a PR. Requires committed changes on a non-main branch, syncs with main before pushing, pushes the current branch, and creates or updates a GitHub PR with TLDR, WHAT CHANGED, and TEST PLAN sections.
+description: Create or update a GitHub pull request for the current git branch. Use when the user asks to open, create, submit, update, or push a PR. Requires committed changes on a non-main branch, syncs with main before pushing, resolves safe sync conflicts, pushes the current branch, and creates or updates a GitHub PR with TLDR, WHAT CHANGED, and TEST PLAN sections.
 ---
 
 # PR
@@ -23,7 +23,9 @@ Create or update a GitHub pull request for the current branch.
    - Choose the safest appropriate strategy:
      - Rebase for simple or unpublished branches.
      - Merge `origin/main` for already-pushed/shared branches when safer.
-   - Pause on conflicts or unsafe rewrite risk.
+   - This sync is required before every push.
+   - Resolve conflicts using Conflict Handling when safe.
+   - Pause on unsafe rewrite risk or uncertain sync strategy.
 4. Push:
    - Push current branch to origin before creating or updating the PR.
    - If the branch has no upstream, set it with `git push -u origin <branch>`.
@@ -35,6 +37,22 @@ Create or update a GitHub pull request for the current branch.
    - If a PR exists, update it with `gh pr edit`.
    - If no PR exists, create one with `gh pr create --base main --head <branch>`.
    - Report the PR URL.
+
+## Conflict Handling
+
+When sync reports conflicts:
+
+- Run `git status --short` and inspect each unmerged file and conflict hunk.
+- Resolve conflicts when the fix is clear, scoped to the current branch/main
+  integration, and preserves both sides' intended behavior.
+- Edit only files Git reports as conflicted unless a minimal adjacent change is
+  required to make the resolution build or test.
+- Stage resolved files, then continue with `git rebase --continue` or
+  `git merge --continue`.
+- Rerun or confirm the affected verification commands before pushing.
+- Pause and ask if the conflict touches unrelated, user-owned, generated, or
+  secret-like files, requires product/design judgment, would discard work, or
+  is not confidently resolvable.
 
 ## PR Body Format
 
@@ -68,7 +86,8 @@ Rules:
 
 Use only the minimal needed commands:
 - Inspect: `git status`, `git branch`, `git remote`, `git log`
-- Sync/push: `git fetch`, `git rebase` or `git merge`, `git push`
+- Sync/push: `git fetch`, `git rebase` or `git merge`, `git rebase --continue`, `git merge --continue`, `git push`
 - GitHub: `gh auth status`, `gh pr view`, `gh pr create`, `gh pr edit`
 
-Do not commit, amend, edit files, or merge PRs from this skill.
+Do not commit or amend normal repo changes, or merge PRs from this skill. Edit
+files only when Git reports them as conflicted during the required main sync.

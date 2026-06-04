@@ -1,6 +1,6 @@
 ---
 name: update-commit-metadata
-description: Update the latest git commit metadata without changing files. Use when the user asks to rewrite, clean up, retitle, restructure, or update the latest commit message/body/trailers. Produces commit metadata with TLDR, WHAT CHANGED, and TEST PLAN sections, preserves accurate test results, syncs with main before pushing rewritten history, and pushes with force-with-lease when needed.
+description: Update the latest git commit metadata without changing files. Use when the user asks to rewrite, clean up, retitle, restructure, or update the latest commit message/body/trailers. Produces commit metadata with TLDR, WHAT CHANGED, and TEST PLAN sections, preserves accurate test results, syncs with main before pushing rewritten history, resolves safe sync conflicts, and pushes with force-with-lease when needed.
 ---
 
 # Update Commit Metadata
@@ -21,9 +21,27 @@ Rewrite only the latest commit's message metadata. Do not change repo files.
    - Do not invent tests; preserve known test results or mark unknown commands as not run only when accurate.
 4. If the branch has an upstream or the user asks to push:
    - `git fetch origin main`
-   - Sync with main using the safest appropriate rebase/merge path.
+   - Sync with main using the safest appropriate rebase/merge path before every
+     push.
+   - Resolve conflicts using Conflict Handling when safe.
    - Push rewritten history with `git push --force-with-lease`.
-   - Pause on conflicts, lease failures, or unsafe rewrite risk.
+   - Pause on lease failures or unsafe rewrite risk.
+
+## Conflict Handling
+
+When sync reports conflicts:
+
+- Run `git status --short` and inspect each unmerged file and conflict hunk.
+- Resolve conflicts when the fix is clear, scoped to the current branch/main
+  integration, and preserves both sides' intended behavior.
+- Edit only files Git reports as conflicted unless a minimal adjacent change is
+  required to make the resolution build or test.
+- Stage resolved files, then continue with `git rebase --continue` or
+  `git merge --continue`.
+- Preserve the metadata-only intent: do not stage unrelated file changes.
+- Pause and ask if the conflict touches unrelated, user-owned, generated, or
+  secret-like files, requires product/design judgment, would discard work, or
+  is not confidently resolvable.
 
 ## Message Format
 
@@ -58,6 +76,6 @@ Rules:
 Use only the minimal needed commands:
 - Inspect: `git status`, `git log`, `git show`, `git branch`
 - Rewrite metadata: `git commit --amend`
-- Sync/push when needed: `git fetch`, `git rebase` or `git merge`, `git push --force-with-lease`
+- Sync/push when needed: `git fetch`, `git rebase` or `git merge`, `git rebase --continue`, `git merge --continue`, `git push --force-with-lease`
 
-Do not stage files, edit files, or create PRs from this skill.
+Do not stage or edit non-conflicted files, or create PRs from this skill.

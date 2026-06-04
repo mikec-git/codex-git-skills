@@ -1,4 +1,4 @@
 interface:
   display_name: "Update Commit Metadata"
   short_description: "Rewrite latest commit metadata"
-  default_prompt: "Use $update-commit-metadata to update the latest commit subject/body/trailers without changing files."
+  default_prompt: "Use $update-commit-metadata to update the latest commit subject/body/trailers without changing non-conflicted files, sync with main, and push when needed."
